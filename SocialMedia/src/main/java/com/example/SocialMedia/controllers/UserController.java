@@ -6,13 +6,13 @@ import com.example.SocialMedia.repositories.UsersRepository;
 import com.example.SocialMedia.services.UsersService;
 import com.example.SocialMedia.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController {
 
@@ -29,25 +29,23 @@ public class UserController {
         this.userValidator = userValidator;
     }
 
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "auth/login";
+    @GetMapping
+    public ResponseEntity<?> getAllUsers() {
+        List<User> allUsers = usersService.findAllUsers();
+        System.out.println(allUsers.toString());
+        return ResponseEntity.ok(allUsers);
     }
 
-    @GetMapping("/registration")
-    public String registrationPage(@ModelAttribute("user") User user) {
-        return "auth/registration";
+    @GetMapping("/getUserInfo")
+    public ResponseEntity<?> getUserInfo(User user) {
+        user = usersService.getUserByEmail(user.getEmail());
+        return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/registration")
-    public String performRegistration(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-        userValidator.validate(user, bindingResult);
-
-        if (bindingResult.hasErrors())
-            return "/auth/registration";
-
+    @GetMapping("/saveUser")
+    public ResponseEntity<User> saveUserInfo(@ModelAttribute("user") @Valid User user) {
         usersService.saveUser(user);
-        return "redirect:/auth/login";
+        return ResponseEntity.ok(user);
     }
+
 }

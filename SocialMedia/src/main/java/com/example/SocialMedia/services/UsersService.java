@@ -31,11 +31,21 @@ public class UsersService {
         return foundUser.orElse(null);
     }
 
-    @Transactional
-    public void saveUser(User user) {
-        usersRepository.save(user);
+    public User getUserByEmail(String email) {
+        Optional<User> optionalUser = usersRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        }
+        return null;
     }
 
+    @Transactional
+    public void saveUser(User user) {
+        Optional<User> optionalUser = usersRepository.findByEmail(user.getEmail());
+        if (!optionalUser.isPresent()) {
+            usersRepository.save(user);
+        }
+    }
 
     @Transactional
     public void updateUser(int id, User updatedUser) {

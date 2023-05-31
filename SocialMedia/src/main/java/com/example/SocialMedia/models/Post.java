@@ -19,11 +19,11 @@ public class Post {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(notes = "This is the auto generated post id")
-    private int id;
+    private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ApiModelProperty(notes = "Userid of the person who posted the post")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User owner;
 
     @NotNull
@@ -32,7 +32,7 @@ public class Post {
     @ApiModelProperty(notes = "Heading or title of the post")
     private String title;
 
-    @Column(name = "createdAt")
+    @Column(name = "createdAt", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
@@ -48,6 +48,10 @@ public class Post {
     @NotNull
     @Lob
     @ApiModelProperty(notes = "The url of the content")
+    @Column(columnDefinition = "TEXT", name = "content")
     private String content;
+
+    public Post() {
+    }
 
 }

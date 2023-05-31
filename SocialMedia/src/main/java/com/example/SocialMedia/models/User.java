@@ -1,5 +1,6 @@
 package com.example.SocialMedia.models;
 
+import com.example.SocialMedia.enums.Role;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public class User {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(notes = "Automatically generated id of the user")
-    private int id;
+    private Integer id;
 
     @OneToMany(mappedBy = "owner")
     private List<Post> posts;
@@ -33,13 +34,19 @@ public class User {
     @ApiModelProperty(notes = "Email of the user for logging in")
     private String email;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     @ApiModelProperty(notes = "Roles that user is going to have")
-    List<Role> roles;
+    private Role role;
 
     @Column(name = "password")
     @ApiModelProperty(notes = "Password of the user for logging in")
     private String password;
+
+    public User( String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
     public User() {
 

@@ -1,4 +1,4 @@
-package com.example.SocialMedia.models;
+package com.example.SocialMedia.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 
